@@ -21,8 +21,34 @@ const CinemaSeatooking = ({
   subtitle = "Select ypur preferred seats",
 
 }) => {
+  const colors = [
+    "blue",
+    "purple",
+    "yellow",
+    "green",
+    "red",
+    "indigo",
+    "pink",
+    "gray",
+  ];
 
-  const getSeatType = () => {
+
+
+
+  const getSeatType = (row) => {
+  const seatTypeEntries = Object.entries(seatTypes);
+
+  for (let i = 0; i < seatTypeEntries.length; i++) {
+    const [type, config] = seatTypeEntries[i];
+    if (config.row.includes(row)) {
+      const color = colors[i % colors.length];
+      return { type, color, ...config };
+    }
+  }
+
+    const [firstType, firstConfig] = seatTypeEntries[0];
+    return { type: firstType, color: colors[0], ...firstConfig }
+
     /// todo 
   };
 
@@ -54,11 +80,45 @@ const CinemaSeatooking = ({
 
 
   const [seats, setSeats] = useState(initializeSeats);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
+  const getColorClass = (colorName) => {
+    const colorMap = {
+      blue: "bg-blue-100 border-blue-300 text-blue-800",
+      purple: "bg-purple-100 border-purple-300 text-purple-800",
+      yellow: "bg-yellow-100 border-yellow-300 text-yellow-800",
+      green: "bg-green-100 border-green-300 text-green-800",
+      red: "bg-red-100 border-red-300 text-red-800",
+      indigo: "bg-indigo-100 border-indigo-300 text-indigo-800",
+      pink: "bg-pink-100 border-pink-300 text-pink-800",
+      gray: "bg-gray-100 border-gray-300 text-gray-800",
+    };
+    return colorMap[colorName] || colorMap.blue;
+  };
+
+
+
+
+
+
+
+
+
+
 
   const getSeatClassName = (seat) => {
-    return "w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 m-1 rounded-t-lg border-2 cursor-pointer transition-all duration-200 flex items-center justify-center text-xs sm:text-sm font-bold bg-blue-100 bordeer-blue-300 text-blue-800";
 
+    const baseClass = "w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 m-1 rounded-t-lg border-2 cursor-pointer transition-all duration-200 flex items-center justify-center text-xs sm:text-sm font-bold bg-blue-100 bordeer-blue-300 text-blue-800";
 
+    if (seat.status === 'booked') {
+      return `${baseClass} bg-gray-400 border-grat-500 text-gray-600 cursor-not-allowed`;
+    }
+
+    if (seat.selected) {
+      return `${baseClass} bg-gray-500 border-grat-500 text-gray-600 text-white transform scale-110`;
+    }
+
+    return `${baseClass} ${getColorClass(seat.color)}`;
 
   };
 
@@ -66,8 +126,8 @@ const CinemaSeatooking = ({
     return <div className='flex'>
       {seatRow.slice(StartIndex, endIndex).map((seat, index) => {
         return (
-          <div  className={getSeatClassName(seat)} key={seat.id}>
-            {StartIndex + index + 1}
+          <div className={getSeatClassName(seat)} key={seat.id}>
+            {index + 1}
 
           </div>
         );
@@ -107,13 +167,11 @@ const CinemaSeatooking = ({
                   </span>
                   {renderSeatSection(row, 0, layout.aislePosition)}
                   {/*aisle*/}
+                  <div className='w-8'></div>
                   {renderSeatSection(row,
                     layout.aislePosition,
                     layout.seatsPerRow
                   )}
-
-
-
                 </div>
               )
 
