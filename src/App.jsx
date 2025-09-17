@@ -15,6 +15,7 @@ function App() {
         premium:{name:'Premium', price:250, row:[4,5,6]},
         vip:{name:'VIP', price:350, row:[7,8,9]},
       }}
+      bookedSeats={[ '0_0', 'C5', 'A2', 'H1', 'G8', 'B12', 'E1' ]}
       />
   )
 }

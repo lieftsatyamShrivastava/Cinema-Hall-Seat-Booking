@@ -137,7 +137,14 @@ const CinemaSeatooking = ({
 
   }
 
+    const uniqueSeatTypes = Object.entries(seatTypes).map(
+      ([type, config], index)=> {
+        return {
+          color: colors[index % colors.length],
+          ...config,
+        }
 
+    })
 
   return (
     <div className='w-full min-h-screen bg-gray-50 p-4'>
@@ -184,12 +191,26 @@ const CinemaSeatooking = ({
 
 
 
+         {/* legend */}
+<div className="flex flex-wrap justify-center gap-6 mb-6 p-4 bg-gray-50 rounded-lg">
+  {uniqueSeatTypes.map((seatType) => (
+    <div key={seatType.type} className="flex items-center gap-2">
+      <div
+        className={`w-6 h-6 rounded ${
+          getColorClass(seatType.color) || "bg-blue-100 border-blue-300"
+        }`}
+      ></div>
+      <span className="text-sm">
+        {seatType.name} ({currency}{seatType.price})
+      </span>
+    </div>
+  ))}
+</div>
 
 
 
 
 
-        {/*legend*/}
         {/*summary*/}
         {/*Book Button*/}
 
